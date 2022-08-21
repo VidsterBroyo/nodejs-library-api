@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Aboreto&display=swap');
+
+body{
+  background-color: #540B0E;
+}
+
+#header{
+  background-color: #9E2A2B;
+  font-family: 'Aboreto', cursive;
+}
+
+#header-2{
+  background-color: #9E2A2B;
+  font-family: 'Aboreto', cursive;
+}
+
+.card-title{
+  color: #FFF3B0;
+  font-family: 'Aboreto', cursive;
+}
+
+.author{
+  color: white;
+  margin-bottom: 2px;
+}
+
+.change-btn, .submit-btn{
+  background-color: #E09F3E;
+}
+
+.submit-btn{
+  margin-bottom: 5px;
+  background-color: #E09F3E;
+}
+
+.delete-btn{
+  background-color: #9E2A2B;
+}
