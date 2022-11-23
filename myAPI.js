@@ -1,76 +1,87 @@
 // npm libraries
-const fs = require('fs')
-const express = require('express')
-const app = express()
-const PORT = 8000
+const fsP = require('fs').promises
+
+const bodyParser = require('body-parser')
 const multer = require('multer')
 const upload = multer()
-const bodyParser = require('body-parser')
+const express = require('express')
+const app = express()
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true })) // support encoded bodies
 app.use("/static", express.static('./static/'))
 
+var AWS = require('aws-sdk');
+AWS.config.update({region: 'ca-central-1'});
+var ddb = new AWS.DynamoDB.DocumentClient;
+
+const PORT = process.env.PORT || 5000
+
 
 // home page
-app.get('/', (req, res) => { 
-    res.writeHead(200, {'Content-Type': 'text/html'})
-    fs.readFile('./index.html', (err, data) => res.end(data))
+app.get('/', async (req, res) => { 
+    let data = await fsP.readFile('./index.html')
+    res.writeHead(200, {'Content-Type': 'text/html'}).end(data)
 })
 
 
 // get request
-app.get('/getBooks', (req, res) => { 
-    fs.readFile('./books.json', (err, data) => res.writeHead(200, {'Content-Type': 'application/json'}).end(data))
+app.get('/getBooks', async (req, res) => { 
+
+    var params = {TableName: 'bookShelfDB'}
+
+    let data = await ddb.scan(params).promise()
+    res.json(data["Items"])
 })
 
 
 // post request
-// (using upload.none() because there's only text content)
-app.post('/postReq', upload.none(), (req, res) => {
+app.post('/postReq', upload.none(), async(req, res) => {
 
-    // open json, turn json to an array, add new book to array, write array to file in JSON format
-    fs.readFile('./books.json', (err, data) => {
-        bookArray = JSON.parse(data)
-        bookArray.push({"title":req.body.title, "author":req.body.author, "rating":parseInt(req.body.rating), "cover":req.body.cover})
-        fs.writeFile('books.json', JSON.stringify(bookArray), (err) => res.redirect('/'))
-    })
+    var params = {
+        TableName: 'bookShelfDB',
+        Item: {
+          'title' : req.body.title,
+          'author' : req.body.author,
+          'cover' : req.body.cover,
+          'rating' : req.body.rating
+        }
+      }
+    
+    data = await ddb.put(params).promise()
+    res.redirect('/')
 })
 
 
 // put request (updating rating)
-app.put('/putReq/:title/:rating', (req, res) => {
+app.put('/putReq/:author/:title/:rating', async (req, res) => {
 
-    // open json, turn json to an array, find book in array, change rating, write array to file in JSON format
-    fs.readFile('./books.json', (err, data) => {
-        bookArray = JSON.parse(data)
+    const params = {
+        TableName: "bookShelfDB",
+        Key: {
+            "title": req.params.title,
+            "author": req.params.author
+        },
+        UpdateExpression: "set rating = :x",
+        ExpressionAttributeValues: { ":x": req.params.rating }
+    }
 
-        for (let i = 0; i < bookArray.length; i++) {
-            if (bookArray[i].title == req.params.title) {
-                bookArray[i].rating = req.params.rating
-            }
-        }
-        
-        fs.writeFile('books.json', JSON.stringify(bookArray), (err) => res.end())
-    })
+    await ddb.update(params).promise()
+    res.redirect('/')
 })
 
 
 // delete request
-app.delete('/delReq/:title', (req, res) => {
-    delTitle = req.params.title
-
-    // open json, turn json to an array, find book in array, delete book, write array to file in JSON format
-    fs.readFile('./books.json', (err, data) => {
-        bookArray = JSON.parse(data)
-        for(let i = 0; i < bookArray.length; i++){
-            if(bookArray[i].title == delTitle){
-                bookArray.splice(i, 1)
-                break
-            }
+app.delete('/delReq/:title/:author', async (req, res) => {
+    const params = {
+        TableName: 'bookShelfDB',
+        Key: {
+            "title": req.params.title,
+            "author": req.params.author
         }
-        fs.writeFile('books.json', JSON.stringify(bookArray), (err) => res.end())
-    })
-    
+    }
+
+    await ddb.delete(params).promise()
+    res.end()
 })
 
 

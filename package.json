@@ -4,16 +4,19 @@
   "description": "",
   "main": "myAPI.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node  myAPI.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.1253.0",
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",
     "express": "^4.18.1",
     "fs": "^0.0.1-security",
-    "multer": "^1.4.5-lts.1"
+    "multer": "^1.4.5-lts.1",
+    "uuid": "^9.0.0"
   }
 }

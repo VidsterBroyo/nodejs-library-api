@@ -33,7 +33,7 @@
                 <label for="newRating">New rating (1-5)</label>
               </div>
               <div class="mt-3">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
                 <button onclick="changeRating()" class="btn btn-primary">Submit</button>
               </div>
             </form>
@@ -48,7 +48,7 @@
       <h2>Add a book!</h2>
     </div>
 
-    <form action="http://localhost:8000/postReq" method="POST" enctype="multipart/form-data">
+    <form id="newBookForm" action="http://localhost:5000/postReq" method="POST" enctype="multipart/form-data">
       <div class="form-floating mb-3 mt-3">
         <input type="text" class="form-control" id="title" name="title">
         <label for="title">Title</label>
