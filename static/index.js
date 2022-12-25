@@ -8,7 +8,7 @@ function loadBooks(){
     try{
         // send getBooks request
         var request = new XMLHttpRequest()
-        request.open('GET', 'http://ec2-35-182-99-203.ca-central-1.compute.amazonaws.com:5000/getBooks', false)
+        request.open('GET', 'http://localhost:5000/getBooks', false)
         request.send()
 
         // save list of book objects
@@ -51,7 +51,7 @@ function deleteBook(titleAuthor){
     
     // send request to delete book
     var request = new XMLHttpRequest()
-    request.open('DELETE', `http://ec2-35-182-99-203.ca-central-1.compute.amazonaws.com:5000/delReq/${title}/${author}`, false)
+    request.open('DELETE', `http://localhost:5000/delReq/${title}/${author}`, false)
     request.send()
 
     // reload page
@@ -73,7 +73,7 @@ function changeRating(){
 
     // send change rating request
     var request = new XMLHttpRequest()
-    request.open('PUT', `http://ec2-35-182-99-203.ca-central-1.compute.amazonaws.com:5000/putReq/${changeRatingAuthor}/${changeRatingTitle}/${newRating}`, false)
+    request.open('PUT', `http://localhost:5000/putReq/${changeRatingAuthor}/${changeRatingTitle}/${newRating}`, false)
     request.send()
 
     // reload page
