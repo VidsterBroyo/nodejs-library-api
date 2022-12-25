@@ -12,11 +12,12 @@
 </head>
 
 <body onload="loadBooks()">
-  <div class="container">
+  <div class="container mb-5" >
     <div class="mt-4 mb-5 p-4 text-white rounded" id="header">
       <h1>Vidu's Shelf</h1>
     </div>
 
+    <!-- Book display -->
     <div id="bookGrid"></div>
 
     <div class="modal fade" id="changeRating" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
@@ -44,11 +45,12 @@
 
     <hr>
 
+    <!-- Add a book form -->
     <div class="mt-5 mb-3 p-3 text-white rounded" id="header-2">
       <h2>Add a book!</h2>
     </div>
 
-    <form id="newBookForm" action="http://localhost:5000/postReq" method="POST" enctype="multipart/form-data">
+    <form id="newBookForm" action="http://ec2-35-182-99-203.ca-central-1.compute.amazonaws.com:5000/postReq" method="POST" enctype="multipart/form-data">
       <div class="form-floating mb-3 mt-3">
         <input type="text" class="form-control" id="title" name="title">
         <label for="title">Title</label>
